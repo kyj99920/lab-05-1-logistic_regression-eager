@@ -1,13 +1,16 @@
 import numpy as np
+#앞으로 셀에서는 약자np. 으로 사용할것임
 import matplotlib.pyplot as plt
 %matplotlib inline
 import tensorflow as tf
+#X 와 Y 의 상관관계를 분석하는 기초적인 선형 회귀 모델을 만들고 실행 
 import tensorflow.contrib.eager as tfe
 
 tf.enable_eager_execution()
 tf.set_random_seed(777)  # for reproducibility
+#재현성을 위해 난수에 부여되는 시드를 777로 설정한 것 
 print(tf.__version__)
-
+#출력
 x_train = [[1., 2.],
           [2., 3.],
           [3., 1.],
@@ -40,6 +43,7 @@ dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(len(x_tra
 
 W = tf.Variable(tf.zeros([2,1]), name='weight')
 b = tf.Variable(tf.zeros([1]), name='bias')
+#정규분포로부터의 난수값을 반환 
 
 def logistic_regression(features):
     hypothesis  = tf.div(1., 1. + tf.exp(tf.matmul(features, W) + b))
@@ -53,7 +57,11 @@ optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
 
 def accuracy_fn(hypothesis, labels):
     predicted = tf.cast(hypothesis > 0.5, dtype=tf.float32)
+    #cast 함수로 hypothesis > 0.5 명제를 floa32 로 변환 
+    #hypothesis 가 0.5 보다 크다면 1.을 0.5 보다 작거나 같으면 0.을 return 
     accuracy = tf.reduce_mean(tf.cast(tf.equal(predicted, labels), dtype=tf.int32))
+    #equal 함수로 예상값(predicted)과 실제값(Y)이 같은지 비교후
+    #True/False 결과를 float32 로 cast 시키고 #시행 전체의 평균을 reduce_mean 으로 구함 
     return accuracy
 
 def grad(hypothesis, features, labels):
