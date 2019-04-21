@@ -35,10 +35,12 @@ x2 = [x[1] for x in x_train]
 colors = [int(y[0] % 3) for y in y_train]
 plt.scatter(x1,x2, c=colors , marker='^')
 plt.scatter(x_test[0][0],x_test[0][1], c="red")
+#스캐터플롯의 색 지정 및 변경
 
 plt.xlabel("x1")
+# 주어진 데이터 x1을 점으로 표시
 plt.ylabel("x2")
-# 주어진 데이터들을 점으로 표시
+# 주어진 데이터 x2를 점으로 표시
 plt.show()
 #명령은 시각화 명령을 실제로 차트로 렌더링(rendering)하고 마우스 움직임 등의 이벤트를 기다리라는 지시
 
@@ -54,6 +56,8 @@ def logistic_regression(features):
 
 def loss_fn(hypothesis, features, labels):
     cost = -tf.reduce_mean(labels * tf.log(logistic_regression(features)) + (1 - labels) * tf.log(1 - hypothesis))
+    #cost 함수 정의
+    #reduce_mean은 평균을 만들어주는 부분
     return cost
 
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
@@ -74,6 +78,7 @@ def grad(hypothesis, features, labels):
     return tape.gradient(loss_value, [W,b])
 
 EPOCHS = 1001
+#전체 sample 데이터를 이용하여 1001바퀴 돌며 학습하는 것
 
 for step in range(EPOCHS):
     for features, labels  in tfe.Iterator(dataset):
