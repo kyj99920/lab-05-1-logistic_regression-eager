@@ -7,6 +7,7 @@ import tensorflow as tf
 import tensorflow.contrib.eager as tfe
 
 tf.enable_eager_execution()
+#ensorflow 함수들의 동작을 바꾸는 것
 tf.set_random_seed(777)  # for reproducibility
 #재현성을 위해 난수에 부여되는 시드를 777로 설정한 것 
 print(tf.__version__)
@@ -37,10 +38,12 @@ plt.scatter(x_test[0][0],x_test[0][1], c="red")
 
 plt.xlabel("x1")
 plt.ylabel("x2")
+# 주어진 데이터들을 점으로 표시
 plt.show()
+#명령은 시각화 명령을 실제로 차트로 렌더링(rendering)하고 마우스 움직임 등의 이벤트를 기다리라는 지시
 
 dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(len(x_train))
-
+#training dataset 준비
 W = tf.Variable(tf.zeros([2,1]), name='weight')
 b = tf.Variable(tf.zeros([1]), name='bias')
 #정규분포로부터의 난수값을 반환 
@@ -54,6 +57,7 @@ def loss_fn(hypothesis, features, labels):
     return cost
 
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
+#GradientDescent 방법을 통해 최적값 a를 찾아내어서 cost를 최소화하는 방향으로 train하는 것
 
 def accuracy_fn(hypothesis, labels):
     predicted = tf.cast(hypothesis > 0.5, dtype=tf.float32)
@@ -79,3 +83,4 @@ for step in range(EPOCHS):
             print("Iter: {}, Loss: {:.4f}".format(step, loss_fn(logistic_regression(features),features,labels)))
 test_acc = accuracy_fn(logistic_regression(x_test),y_test)
 print("Testset Accuracy: {:.4f}".format(test_acc))
+#출력
