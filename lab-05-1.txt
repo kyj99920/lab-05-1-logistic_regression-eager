@@ -29,13 +29,16 @@ y_train = [[0.],
 
 x_test = [[5.,2.]]
 y_test = [[1.]]
-#x_test와 y_test 정의
+#x_test와 y_test 입력
 
 
 x1 = [x[0] for x in x_train]
 x2 = [x[1] for x in x_train]
+#x1과 x2 입력
+
 
 colors = [int(y[0] % 3) for y in y_train]
+#색 지정
 plt.scatter(x1,x2, c=colors , marker='^')
 plt.scatter(x_test[0][0],x_test[0][1], c="red")
 #스캐터플롯의 색 지정 및 변경
@@ -48,15 +51,16 @@ plt.show()
 #명령은 시각화 명령을 실제로 차트로 렌더링(rendering)하고 마우스 움직임 등의 이벤트를 기다리라는 지시
 
 dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(len(x_train))
-#training dataset 준비
+# training dataset 준비
 W = tf.Variable(tf.zeros([2,1]), name='weight')
 b = tf.Variable(tf.zeros([1]), name='bias')
 #정규분포로부터의 난수값을 반환 
 
 def logistic_regression(features):
     hypothesis  = tf.div(1., 1. + tf.exp(tf.matmul(features, W) + b))
+    #hypothesis 가 sigmoid 함수 사용
     return hypothesis
-
+    
 def loss_fn(hypothesis, features, labels):
     cost = -tf.reduce_mean(labels * tf.log(logistic_regression(features)) + (1 - labels) * tf.log(1 - hypothesis))
     #cost 함수 정의
@@ -77,18 +81,24 @@ def accuracy_fn(hypothesis, labels):
 
 def grad(hypothesis, features, labels):
     with tf.GradientTape() as tape:
+    #tape에 계산 과정을 기록해두었다가 tape.gradient를 이용해서 미분을 자동으로 구할 수 있음
         loss_value = loss_fn(logistic_regression(features),features,labels)
+        #loss_value 설정
     return tape.gradient(loss_value, [W,b])
+    
 
 EPOCHS = 1001
 #전체 sample 데이터를 이용하여 1001바퀴 돌며 학습하는 것
 
 for step in range(EPOCHS):
+#EPOCHS 반복
     for features, labels  in tfe.Iterator(dataset):
         grads = grad(logistic_regression(features), features, labels)
+        #grads 정의
         optimizer.apply_gradients(grads_and_vars=zip(grads,[W,b]))
         if step % 100 == 0:
             print("Iter: {}, Loss: {:.4f}".format(step, loss_fn(logistic_regression(features),features,labels)))
+            #step % 100 이 0이면 다음 출력
 test_acc = accuracy_fn(logistic_regression(x_test),y_test)
 #test_acc 정의
 print("Testset Accuracy: {:.4f}".format(test_acc))
