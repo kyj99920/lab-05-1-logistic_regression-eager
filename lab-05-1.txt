@@ -5,9 +5,10 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 #X 와 Y 의 상관관계를 분석하는 기초적인 선형 회귀 모델을 만들고 실행 
 import tensorflow.contrib.eager as tfe
+#tfe 모듈은 즉시 실행 모드와 그래프 실행 모드 양쪽다 동작하는 다양한 기능들을 포함
 
 tf.enable_eager_execution()
-#ensorflow 함수들의 동작을 바꾸는 것
+#즉시 실행 (eager execution)을 시작
 tf.set_random_seed(777)  # for reproducibility
 #재현성을 위해 난수에 부여되는 시드를 777로 설정한 것 
 print(tf.__version__)
@@ -76,7 +77,8 @@ def accuracy_fn(hypothesis, labels):
     #hypothesis 가 0.5 보다 크다면 1.을 0.5 보다 작거나 같으면 0.을 return 
     accuracy = tf.reduce_mean(tf.cast(tf.equal(predicted, labels), dtype=tf.int32))
     #equal 함수로 예상값(predicted)과 실제값(Y)이 같은지 비교후
-    #True/False 결과를 float32 로 cast 시키고 #시행 전체의 평균을 reduce_mean 으로 구함 
+    #True/False 결과를 float32 로 cast 시키고 
+    #시행 전체의 평균을 reduce_mean 으로 구함 
     return accuracy
 
 def grad(hypothesis, features, labels):
